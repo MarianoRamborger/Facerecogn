@@ -12,12 +12,6 @@ button {
   cursor: pointer;
 }
 
-button:hover{
-  box-shadow: 4px;
-  color: blue;
-  font-family: "Courier";
-}
-
 code {
   font-family: "Calibri" ,source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
