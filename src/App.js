@@ -7,6 +7,8 @@ import ImageLinkForm from './Components/ImageLinkForm/ImageLinkForm.js'
 import Rank from './Components/Rank/Rank.js'
 import Particles from 'react-particles-js'
 import FaceRecognition from './Components/Facerecognition/Facerecognition.js'
+import SignIn from './Components/SignIn/SignIn.js'
+import Register from './Components/Register/Register.js'
 
 
 const app = new Clarifai.App({
@@ -45,7 +47,14 @@ class App extends Component {
             input: '',
             imgUrl:'', //URL state. Changes when somebody uploads a picture.
             box: {},
+            route: 'SignIn', //keeps track of where we are on the page. Starts en SignIn
+            isSignedIn: false,
 
+            //Route tiene los valores:
+            // Home: La app en si.
+            // SignIn: To sign in
+            // Register: Para registrar
+            // signOut: Signout y cambia los componentes de Nav
 
             
         }
@@ -58,7 +67,7 @@ class App extends Component {
     const image = document.getElementById('inputImage');
     const width = Number(image.width);
     const height = Number(image.height);
-    console.log(width, height);
+
 
     return { //this is going to give the four values to the box. Thanks to fancy mathematics. when OnbuttonSubmit runs
         leftCol: clarifyFace.left_col * width,
@@ -70,7 +79,7 @@ class App extends Component {
 
 // Receives props from calculateFaceLocation when onButtonSubmit runs and changes the state of box with them
   displayFaceBox = (box) => {
-      console.log(box);
+   
       this.setState({box: box})
   }
 
@@ -78,7 +87,7 @@ class App extends Component {
    /////////////////// // REVISA INPUT EN TEXTBOX.////////////////////////////////////////////////////
     onInputChange = (event) => { /* Trickles down to imagelinkform para escuchar. */
         this.setState({input :  event.target.value});
-        console.log(event.target.value); 
+     
         
           
         
@@ -105,6 +114,18 @@ class App extends Component {
             }
 
 
+            onRouteChange = (route) => {
+                this.setState({route: route}); //signs in thru signIn
+                if (route === 'signOut') {
+                    this.setState({isSignedIn: false})
+                } else if (route === 'Home') {
+                    this.setState({isSignedIn: true});
+                }
+            }
+
+         
+            
+
     
     render() {
       return(
@@ -113,22 +134,36 @@ class App extends Component {
     params={particleOptions
 	    
 	} />
-        {/* <Particles className='particles'
-                    params={{particleOptions}} 
-
-                    />
-                     */}
-        <Navigation />
-        <Logo />
-        <Rank />
+        
+        <Navigation 
+            onRouteChange={this.onRouteChange} 
+            isSignedIn={this.state.isSignedIn}
+        />
+       { //curly brackets dejan usar JS sintaxys para hacer el if statement.
+        
+        this.state.route === 'Home'   //The UGLIEST if statement decides what is to be rendered
+           ?  <div>
+                <Logo />
+                <Rank />
         <ImageLinkForm 
         onInputChange={this.onInputChange } //Clava el listener de eventos en imagelink 
         onButtonSubmit={this.onButtonSubmit } //Same with submit
         />   
-        
-        
         <FaceRecognition box={this.state.box} imgUrl={this.state.imgUrl} /> 
+                </div>
+           
+           :  ( 
+              this.state.route === 'SignIn' 
+              ? <SignIn onRouteChange={this.onRouteChange} /> 
+              :   <Register onRouteChange={this.onRouteChange} />
+              )    
+               
+           
+        }
 
+       
+        
+    
 
 
         </div>
