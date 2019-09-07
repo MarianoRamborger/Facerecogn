@@ -50,17 +50,35 @@ class App extends Component {
             box: {},
             route: 'SignIn', //keeps track of where we are on the page. Starts en SignIn
             isSignedIn: false,
-
-            //Route tiene los valores:
-            // Home: La app en si.
-            // SignIn: To sign in
-            // Register: Para registrar
-            // signOut: Signout y cambia los componentes de Nav
-
-            
+            user: {
+                id: "",
+                name: "",
+                email: "",
+                password: "",
+                entries: 0,
+                joined: ''
+            }       
         }
     }
 
+    
+
+
+
+     loadUser = (data) => { //Es llamada por register y signin, updateando el user. 
+        this.setState({user: {
+            id: data.id,
+            name: data.name,
+            email: data.email,
+            password: data.password,
+            entries: data.entries,
+            joined: data.joined,
+        }})
+     }
+
+
+
+   
     // componentDidMount(){ //if mounted, fetches server
     //     fetch('http://localhost:3000')  //notice que fetchea la root.
     //     .then(response => response.json())
@@ -110,15 +128,31 @@ class App extends Component {
             Clarifai.FACE_DETECT_MODEL,
             this.state.input).then( // Pasa la imagen a la API
     
-            response => //Recibe el analisis de la API
-            this.displayFaceBox(this.calculateFaceLocation(response)))
-            // Corre la formula para buscar los parámetros de la facialbox.
-            // Y los pasa a la funcion que cambia el estado de la box.
-
-            
-            
+            response =>  {
+                if (response) {
+                    fetch('http://localhost:3000/image', {
+                        method: 'put',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify( { 
+                        id: this.state.user.id,  
+                        })
+                     
+                    })
+                    .then(response => response.json())
+                    .then(count => {
+                        this.setState(
+                            Object.assign(this.state.user, {
+                                entries: count
+                            })
+                          
+                        )
+                })}
+                                                                                        //Recibe el analisis de la API
+            this.displayFaceBox(this.calculateFaceLocation(response))
+            })
+                                                                                                            // Corre la formula para buscar los parámetros de la facialbox.
+                                                                                                                     // Y los pasa a la funcion que cambia el estado de la box.
             .catch(err => console.log(err)); 
-            
             }
             
 
@@ -153,7 +187,7 @@ class App extends Component {
         this.state.route === 'Home'   //The UGLIEST if statement decides what is to be rendered
            ?  <div>
                 <Logo />
-                <Rank />
+                <Rank name={this.state.user.name} entries={this.state.user.entries} />
         <ImageLinkForm 
         onInputChange={this.onInputChange } //Clava el listener de eventos en imagelink 
         onButtonSubmit={this.onButtonSubmit } //Same with submit
@@ -164,8 +198,8 @@ class App extends Component {
            
            :  ( 
               this.state.route === 'SignIn'  
-              ? <SignIn onRouteChange={this.onRouteChange} /> 
-              :   <Register onRouteChange={this.onRouteChange} />
+              ? <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} /> 
+              :   <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
               )    
                
            
