@@ -11,6 +11,7 @@ import SignIn from './Components/SignIn/SignIn.js'
 import Register from './Components/Register/Register.js'
 
 
+
 const app = new Clarifai.App({
     apiKey: '030a0b2c980b4ed8a51379b71c3f36dd'
 })
@@ -59,6 +60,13 @@ class App extends Component {
             
         }
     }
+
+    // componentDidMount(){ //if mounted, fetches server
+    //     fetch('http://localhost:3000')  //notice que fetchea la root.
+    //     .then(response => response.json())
+    //     .then(data => console.log(data))
+    // }
+
 
     
  //Receives bounding-box data to create the square around people's faces.
@@ -112,6 +120,7 @@ class App extends Component {
             .catch(err => console.log(err)); 
             
             }
+            
 
 
             onRouteChange = (route) => {
@@ -152,8 +161,9 @@ class App extends Component {
         <FaceRecognition box={this.state.box} imgUrl={this.state.imgUrl} /> 
                 </div>
            
+           
            :  ( 
-              this.state.route === 'SignIn' 
+              this.state.route === 'SignIn'  
               ? <SignIn onRouteChange={this.onRouteChange} /> 
               :   <Register onRouteChange={this.onRouteChange} />
               )    
