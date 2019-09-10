@@ -38,27 +38,29 @@ const particleOptions = {
 	       
 	}
  
-   
+
+const initialState = {
+    input: '',
+    imgUrl:'', //URL state. Changes when somebody uploads a picture.
+    box: {},
+    route: 'SignIn', //keeps track of where we are on the page. Starts en SignIn
+    isSignedIn: false,
+    user: {
+        id: "",
+        name: "",
+        email: "",
+        password: "",
+        entries: 0,
+        joined: ''
+}
+}
 
 class App extends Component {
     constructor() { //Hace al componente dinamico dandole un state.
         super();
 
-        this.state = {
-            input: '',
-            imgUrl:'', //URL state. Changes when somebody uploads a picture.
-            box: {},
-            route: 'SignIn', //keeps track of where we are on the page. Starts en SignIn
-            isSignedIn: false,
-            user: {
-                id: "",
-                name: "",
-                email: "",
-                password: "",
-                entries: 0,
-                joined: ''
-            }       
-        }
+        this.state = initialState;
+            
     }
 
     
@@ -144,8 +146,9 @@ class App extends Component {
                             Object.assign(this.state.user, {
                                 entries: count
                             })
-                          
-                        )
+
+                        )  
+                        .catch(console.log);
                 })}
                                                                                         //Recibe el analisis de la API
             this.displayFaceBox(this.calculateFaceLocation(response))
@@ -160,7 +163,7 @@ class App extends Component {
             onRouteChange = (route) => {
                 this.setState({route: route}); //signs in thru signIn
                 if (route === 'signOut') {
-                    this.setState({isSignedIn: false})
+                    this.setState(initialState)
                 } else if (route === 'Home') {
                     this.setState({isSignedIn: true});
                 }
