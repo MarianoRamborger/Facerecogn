@@ -146,9 +146,8 @@ class App extends Component {
                             Object.assign(this.state.user, {
                                 entries: count
                             })
-
-                        )  
-                        .catch(console.log);
+                          
+                        )
                 })}
                                                                                         //Recibe el analisis de la API
             this.displayFaceBox(this.calculateFaceLocation(response))
