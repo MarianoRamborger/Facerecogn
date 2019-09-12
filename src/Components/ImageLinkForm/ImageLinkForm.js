@@ -5,7 +5,7 @@ const ImageLinkForm = ( { onInputChange , onButtonSubmit} ) => { /* destructurin
     return (
         <div>
             <p className="f3">
-                {'This brain detects faces in pictures.'}
+                {'This AI detects faces in pictures.'}
             </p>
            
             <div className='center' id="FORM">
