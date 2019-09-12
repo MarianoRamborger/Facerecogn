@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './App.css';
-import Clarifai from 'clarifai';
 import Navigation from './Components/Navigation/Navigation.js'
 import Logo from './Components/Logo/Logo.js'
 import ImageLinkForm from './Components/ImageLinkForm/ImageLinkForm.js'
@@ -12,9 +11,7 @@ import Register from './Components/Register/Register.js'
 
 
 
-const app = new Clarifai.App({
-    apiKey: '030a0b2c980b4ed8a51379b71c3f36dd'
-})
+
 
 const particleOptions = {
   "particles": {
@@ -125,11 +122,16 @@ class App extends Component {
     //////////////////////CORRE LA FACERECOGNAPPI.
     onButtonSubmit = () => { 
         this.setState({imgUrl: this.state.input}); //imgurl becomes el input. Then pasa al facerecogn component
-
-        app.models.predict( //toma 3 arguments. La key que está declarda mas arriba, el modo y la imagen. 
-            Clarifai.FACE_DETECT_MODEL,
-            this.state.input).then( // Pasa la imagen a la API
-    
+        fetch('http://localhost:3000/imageurl', {
+            method: 'post',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify( { 
+            input: this.state.input  
+            })
+         
+        })
+        .then(response => response.json())
+        .then(
             response =>  {
                 if (response) {
                     fetch('http://localhost:3000/image', {
