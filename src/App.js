@@ -122,7 +122,7 @@ class App extends Component {
     //////////////////////CORRE LA FACERECOGNAPPI.
     onButtonSubmit = () => { 
         this.setState({imgUrl: this.state.input}); //imgurl becomes el input. Then pasa al facerecogn component
-        fetch('http://localhost:3000/imageurl', {
+        fetch('https://immense-mesa-06427.herokuapp.com/imageurl', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify( { 
@@ -134,7 +134,7 @@ class App extends Component {
         .then(
             response =>  {
                 if (response) {
-                    fetch('http://localhost:3000/image', {
+                    fetch('https://immense-mesa-06427.herokuapp.com/image', {
                         method: 'put',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify( { 
